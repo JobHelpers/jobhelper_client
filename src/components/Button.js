@@ -1,8 +1,11 @@
-import './style.css';
+import "./style.css";
 
-export const Button = ({text, setText}) => {
+// Example func
+export const Button = ({ text, setText }) => {
   console.log(text);
   return (
-    <div onClick={() => setText('New description')} className="button">Submit</div>
+    <div onClick={() => setText("New description")} className="button">
+      Submit
+    </div>
   );
-}
+};
