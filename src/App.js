@@ -2,6 +2,9 @@ import { Button } from "./components/Button";
 import { useState } from "react";
 import { Header } from "./components/Header";
 import React from "react";
+import { Checkbox } from "./components/Checkbox";
+import { SpecialtyExpandableButton } from "./components/Button";
+import { CityExpandableButton } from "./components/Button";
 
 // Importing necessary stuff for Switcher
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -36,7 +39,6 @@ function App() {
       {/* Implementing our Switcher */}
       <div
         style={{
-          margin: "auto",
           display: "block",
           width: "fit-content",
         }}
@@ -57,6 +59,17 @@ function App() {
           Ukrainian language
         </h4>
       </div>
+
+      {/* Adding checkboxes */}
+      <p>
+        <Checkbox />
+      </p>
+
+      {/* Adding some expandable buttons */}
+      <p>
+        <SpecialtyExpandableButton />
+        <CityExpandableButton />
+      </p>
     </>
   );
 }
