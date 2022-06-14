@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 // import {
 //   getCities,
 //   getSpecialities,
@@ -8,6 +9,8 @@ import { useEffect } from "react";
 //   getSpecialitiesWithGroupedSubjects,
 //   getSpecialitiesWithSubjects
 // } from './api';
+import FacultyFinder from './modules/FacultyFinder/FacultyFinder';
+import './assets/global-styles.css';
 
 function App() {
 
@@ -22,7 +25,7 @@ function App() {
   }, []);
 
   return (
-    <div>App</div>
+    <FacultyFinder />
   );
 }
 
