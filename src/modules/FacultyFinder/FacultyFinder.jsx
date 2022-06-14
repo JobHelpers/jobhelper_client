@@ -61,6 +61,7 @@ const FacultyFinder = () => {
     <div style={{ margin: '20px' }}>
       {
         !loaded
+          // todo: implement <Loading> component
           ? <div>Loading...</div>
           : (
             <form onSubmit={handleSubmit(onSubmit)}>
