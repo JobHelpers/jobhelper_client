@@ -5,6 +5,8 @@ import React from "react";
 import { Checkbox } from "./components/Checkbox";
 import { SpecialtyExpandableButton } from "./components/Button";
 import { CityExpandableButton } from "./components/Button";
+import { SearchButton } from "./components/Button";
+// import { SwitchSel } from "./components/Switch";
 
 // Importing necessary stuff for Switcher
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -70,6 +72,14 @@ function App() {
         <SpecialtyExpandableButton />
         <CityExpandableButton />
       </p>
+
+      {/* Search button */}
+      <p>
+        <SearchButton />
+      </p>
+
+      {/* Switch selector */}
+      <p>{/* <SwitchSel /> */}</p>
     </>
   );
 }

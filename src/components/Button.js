@@ -11,11 +11,15 @@ export const Button = ({ text, setText }) => {
 };
 
 // Implementing some expandable buttons
-// Haven't added expandability to them yet
 export const SpecialtyExpandableButton = () => {
   return <div className="button">Choose your specialty</div>;
 };
 
 export const CityExpandableButton = () => {
   return <div className="button">Choose your city</div>;
+};
+
+// Search button
+export const SearchButton = () => {
+  return <div className="button">Search</div>;
 };
