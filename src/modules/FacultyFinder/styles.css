@@ -1,0 +1,38 @@
+.faculty-finder-container {
+  display: flex;
+  justify-content: center;
+}
+
+.faculty-finder {
+  width: 600px;
+}
+
+.results {
+  margin-top: 50px;
+}
+
+.results .university {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #e0fff8;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+.results .university .u-icon svg {
+  height: 30px;
+  width: 30px;
+  fill: #147689;
+}
+
+.results .university .u-name {
+  font-size: 14px;
+  font-weight: bolder;
+}
+
+.results ul.faculties li {
+  font-size: 14px;
+  font-weight: bold;
+}
