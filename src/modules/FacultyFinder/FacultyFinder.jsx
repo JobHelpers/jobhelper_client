@@ -15,6 +15,8 @@ import {
   getSpecialities,
   getSubjects,
   getSpecialitiesWithGroupedSubjects,
+  getUniversities,
+  getFaculties,
 } from '../../api';
 import { FacultyFinderResults } from "./FacultyFinderResults";
 
@@ -66,8 +68,41 @@ const FacultyFinder = () => {
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [specialities, setSpecialities] = useState([]);
   const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] = useState({});
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
 
-  const onSubmit = data => console.log(data);
+
+  const onSubmit = async (formData) => {
+
+    setSearchResults([]);
+    setSearchLoading(true);
+
+    const universities = await getUniversities({
+      city: formData.cities.value,
+      speciality: formData.specialities.value
+    });
+
+    const universitiesWithFaculties = [];
+
+    if (universities?.data.length) {
+      universities.data.forEach(university => {
+        getFaculties({
+          university: university.id,
+          speciality: formData.specialities.value
+        }).then((faculties) => {
+          universitiesWithFaculties.push({
+            ...university,
+            faculties: faculties.data
+          });
+        }).finally(() => {
+          setTimeout(() => {
+            setSearchLoading(false);
+            setSearchResults(universitiesWithFaculties);
+          }, 2000)
+        });
+      });
+    }
+  }
 
   const handleSelectedSubjects = (subjectId, selected) => {
     if (selected) setSelectedSubjects([...selectedSubjects, String(subjectId)]);
@@ -90,13 +125,13 @@ const FacultyFinder = () => {
                   if (someOfMultipleExist(selectedSubjects, specialitiesWithGroupedSubjects[item.value].optional)) {
                     return item;
                   }
-                } else {
+                }/* else {
                   return item;
-                }
+                }*/
               }
-            } else {
+            }/* else {
               return item;
-            }
+            }*/
           }
         }
       });
@@ -148,7 +183,7 @@ const FacultyFinder = () => {
         {
           !loaded
             // todo: implement <Loading> component
-            ? <div>Loading...</div>
+            ? <h3>Loading...</h3>
             : (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <ToggleSwitch
@@ -229,7 +264,8 @@ const FacultyFinder = () => {
               </form>
             )
         }
-        <FacultyFinderResults />
+        <FacultyFinderResults loading={searchLoading} searchResults={searchResults} />
+
       </div>
     </div>
   );

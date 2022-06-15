@@ -1,27 +1,30 @@
 import { UniversityIcon } from '../../components';
 import './styles.css';
 
-export const FacultyFinderResults = () => {
+export const FacultyFinderResults = ({ searchResults, loading }) => {
   return (
     <div className="results">
-      <div>
-        <div className="university">
-          <div className="u-icon"><UniversityIcon /></div>
-          <div className="u-name">Національний університет "Львівська політехніка"</div>
-        </div>
-        <ul className="faculties">
-          <li>Інститут комп'ютерних технологій, автоматики та метрології</li>
-          <li>Інститут комп'ютерних наук та інформаційних технологій</li>
-        </ul>
-      </div>
-      <div className="university">
-        <div className="u-icon"><UniversityIcon /></div>
-        <div className="u-name">Національний університет "Львівська політехніка"</div>
-      </div>
-      <div className="university">
-        <div className="u-icon"><UniversityIcon /></div>
-        <div className="u-name">Національний університет "Львівська політехніка"</div>
-      </div>
+      {loading ? <h3>Loading...</h3> : null}
+      {
+        searchResults?.length
+          ? searchResults.map(u => (
+            <div key={u.id}>
+              <div className="university">
+                <div className="u-icon"><UniversityIcon /></div>
+                <div className="u-name">{u.name}</div>
+              </div>
+              {
+                u?.faculties?.length
+                  ? (
+                    <ul>
+                      {u?.faculties.map(f => <li key={f.id}>{f.name}</li>)}
+                    </ul>
+                  ) : null
+              }
+            </div>
+          ))
+          : null
+      }
     </div>
   );
 };
