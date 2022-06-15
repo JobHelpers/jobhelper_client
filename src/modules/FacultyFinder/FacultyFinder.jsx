@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+// todo: split the component to several
+// todo: move functions bellow to utils directory
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import Select from 'react-select'
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
@@ -7,22 +9,45 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
-import { ToggleSwitch, Button } from '../../components';
-import {
-  getCities,
-  getSpecialities,
-  getSubjects,
-} from '../../api';
+import { Button, ToggleSwitch } from '../../components';
+import { getCities, getSpecialities, getSpecialitiesWithGroupedSubjects, getSubjects } from '../../api';
 
 const mainSubjects = [
-  { id: 29, name: 'Українська мова і література' },
-  { id: 1, name: 'Українська мова' },
+  { id: "29", name: 'Українська мова і література' },
+  { id: "1", name: 'Українська мова' },
 ];
 
-const normalizeDataForSelectElement = (data) => {
-  return data.map(item => (
-    { value: item.id, label: item.name }
-  ));
+const multipleExist = (arr, values) => values.every(value => {
+  return arr.includes(value);
+});
+
+const someOfMultipleExist = (arr, values) => values.some(value => {
+  return arr.includes(value);
+});
+
+const normalizeDataForSelectElement = (
+  data,
+  showId = false,
+  fields = { name: 'name', id: 'id' }
+) => {
+  return data.map(item => ({
+    value: item[fields.id],
+    label: showId ? `${item[fields.name]} (${item[fields.id]})` : item[fields.name]
+  }));
+};
+
+const normalizeSpecialitiesWithGroupedSubjects = (specialitiesWithGroupedSubjectsData) => {
+  const newObject = {};
+  specialitiesWithGroupedSubjectsData.forEach(item => {
+    if (newObject[item.speciality_code]) {
+      newObject[item.speciality_code][item.subject_status] = item.subject_ids.split(',');
+    } else {
+      newObject[item.speciality_code] = {};
+      newObject[item.speciality_code][item.subject_status] = item.subject_ids.split(',');
+    }
+  })
+
+  return newObject;
 };
 
 const FacultyFinder = () => {
@@ -32,9 +57,46 @@ const FacultyFinder = () => {
   const [loaded, setLoaded] = useState(false);
   const [cities, setCities] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [specialities, setSpecialities] = useState([]);
+  const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] = useState({});
 
   const onSubmit = data => console.log(data);
+
+  const handleSelectedSubjects = (subjectId, selected) => {
+    if (selected) setSelectedSubjects([...selectedSubjects, String(subjectId)]);
+    else {
+      const updatedSubjects = selectedSubjects.filter(ss => ss !== String(subjectId));
+      setSelectedSubjects(updatedSubjects);
+    }
+  };
+
+  const getFilteredSpecialities = () => {
+    if (selectedSubjects.length) {
+      // eslint-disable-next-line array-callback-return
+      return specialities.filter(item => {
+        // todo: optimize the IF hell bellow
+        if (specialitiesWithGroupedSubjects[item.value]) {
+          if (specialitiesWithGroupedSubjects[item.value].main.includes(mainSubject)) {
+            if (specialitiesWithGroupedSubjects[item.value]?.mandatory) {
+              if (multipleExist(selectedSubjects, specialitiesWithGroupedSubjects[item.value].mandatory)) {
+                if (specialitiesWithGroupedSubjects[item.value]?.optional) {
+                  if (someOfMultipleExist(selectedSubjects, specialitiesWithGroupedSubjects[item.value].optional)) {
+                    return item;
+                  }
+                } else {
+                  return item;
+                }
+              }
+            } else {
+              return item;
+            }
+          }
+        }
+      });
+    }
+    return specialities;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,20 +104,37 @@ const FacultyFinder = () => {
         getCities(),
         getSubjects(),
         getSpecialities(),
+        getSpecialitiesWithGroupedSubjects(),
       ]);
       const [
-        { data: cities },
-        { data: subjects },
-        { data: specialities },
+        { data: citiesData },
+        { data: subjectsData },
+        { data: specialitiesData },
+        { data: specialitiesWithGroupedSubjectsData },
       ] = data;
 
-      setCities(normalizeDataForSelectElement(cities));
+      setCities(normalizeDataForSelectElement(citiesData));
       // todo: remove hardcoded filer when response from the backend will be improved
-      setSubjects(subjects.filter(subject => ![1, 29].includes(subject.id)));
-      setSpecialities(normalizeDataForSelectElement(specialities.filter(speciality => speciality.parent === 0)));
+      setSubjects(subjectsData.filter(subject => ![1, 29].includes(subject.id)));
+      setSpecialities(
+        normalizeDataForSelectElement(
+          specialitiesData.filter(speciality => speciality.parent === 0),
+          true,
+          {
+            name: 'name',
+            id: 'code'
+          }
+        ),
+      );
+      const normalizedSpecialitiesWithGroupedSubjects = normalizeSpecialitiesWithGroupedSubjects(specialitiesWithGroupedSubjectsData);
+      setSpecialitiesWithGroupedSubjects(normalizedSpecialitiesWithGroupedSubjects);
     };
     fetchData().finally(() => setLoaded(true));
   }, []);
+
+  useEffect(() => {
+    setValue('specialities', '');
+  }, [selectedSubjects]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div style={{ margin: '20px' }}>
@@ -81,7 +160,12 @@ const FacultyFinder = () => {
                       <FormControlLabel
                         key={subject.id}
                         control={
-                          <Checkbox name={subject.name} value={subject.id} {...register('subjects')} />
+                          <Checkbox
+                            name={subject.name}
+                            value={subject.id}
+                            onClick={(event) => handleSelectedSubjects(subject.id, event.target.checked)}
+                            {...register('subjects')}
+                          />
                         }
                         label={subject.name}
                       />
@@ -94,7 +178,12 @@ const FacultyFinder = () => {
                       <FormControlLabel
                         key={subject.id}
                         control={
-                          <Checkbox name={subject.name} value={subject.id} {...register('subjects')} />
+                          <Checkbox
+                            name={subject.name}
+                            value={subject.id}
+                            onClick={(event) => handleSelectedSubjects(subject.id, event.target.checked)}
+                            {...register('subjects')}
+                          />
                         }
                         label={subject.name}
                       />
@@ -121,7 +210,7 @@ const FacultyFinder = () => {
                   render={({ field }) =>
                     <Select
                       {...field}
-                      options={specialities}
+                      options={getFilteredSpecialities()}
                       placeholder="Оберіть спеціальність"
                     />}
                 />
