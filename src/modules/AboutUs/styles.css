@@ -1,0 +1,23 @@
+.about-us-up{
+  margin-left : 240px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  font-family: "Arial Black", serif;
+  font-size: 56px;
+  background: -webkit-linear-gradient(#47b4f8, #0448c5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-us-text{
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  font-family: "Arial", serif;
+  font-size: 16px;
+  margin-left : 240px;
+  background: -webkit-linear-gradient(#0b2119, #093944);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
