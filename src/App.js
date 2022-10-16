@@ -1,10 +1,8 @@
-import FacultyFinder from './modules/FacultyFinder/FacultyFinder';
-import './assets/global-styles.css';
+import FacultyFinder from "./modules/FacultyFinder/FacultyFinder";
+import "./assets/global-styles.css";
 
 function App() {
-  return (
-    <FacultyFinder />
-  );
+  return <FacultyFinder />;
 }
 
 export default App;

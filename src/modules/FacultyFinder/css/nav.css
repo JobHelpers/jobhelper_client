@@ -1,0 +1,16 @@
+.top-nav {
+  background-color: rgb(113, 204, 193);
+  padding: 40px;
+  text-align: center;
+  border-radius: 5px;
+  margin-bottom: 120px;
+}
+
+.top-nav a {
+  color: white;
+}
+
+.top-nav a:hover {
+  color: white;
+  font-weight: bold;
+}

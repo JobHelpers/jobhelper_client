@@ -2,14 +2,14 @@
 // todo: move functions bellow to utils directory
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import Select from 'react-select'
-import Box from '@mui/material/Box';
-import FormControl from '@mui/material/FormControl';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Select from "react-select";
+import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
-import { ToggleSwitch, Button } from '../../components';
+import { ToggleSwitch, Button } from "../../components";
 import {
   getCities,
   getSpecialities,
@@ -17,49 +17,56 @@ import {
   getSpecialitiesWithGroupedSubjects,
   getUniversities,
   getFaculties,
-} from '../../api';
+} from "../../api";
 import { FacultyFinderResults } from "./FacultyFinderResults";
 
 const mainSubjects = [
-  { id: "29", name: 'Українська мова і література' },
-  { id: "1", name: 'Українська мова' },
+  { id: "29", name: "Українська мова і література" },
+  { id: "1", name: "Українська мова" },
 ];
 
-const multipleExist = (arr, values) => values.every(value => {
-  return arr.includes(value);
-});
+const multipleExist = (arr, values) =>
+  values.every((value) => {
+    return arr.includes(value);
+  });
 
-const someOfMultipleExist = (arr, values) => values.some(value => {
-  return arr.includes(value);
-});
+const someOfMultipleExist = (arr, values) =>
+  values.some((value) => {
+    return arr.includes(value);
+  });
 
 const normalizeDataForSelectElement = (
   data,
   showId = false,
-  fields = { name: 'name', id: 'id' }
+  fields = { name: "name", id: "id" }
 ) => {
-  return data.map(item => ({
+  return data.map((item) => ({
     value: item[fields.id],
-    label: showId ? `${item[fields.name]} (${item[fields.id]})` : item[fields.name]
+    label: showId
+      ? `${item[fields.name]} (${item[fields.id]})`
+      : item[fields.name],
   }));
 };
 
-const normalizeSpecialitiesWithGroupedSubjects = (specialitiesWithGroupedSubjectsData) => {
+const normalizeSpecialitiesWithGroupedSubjects = (
+  specialitiesWithGroupedSubjectsData
+) => {
   const newObject = {};
-  specialitiesWithGroupedSubjectsData.forEach(item => {
+  specialitiesWithGroupedSubjectsData.forEach((item) => {
     if (newObject[item.speciality_code]) {
-      newObject[item.speciality_code][item.subject_status] = item.subject_ids.split(',');
+      newObject[item.speciality_code][item.subject_status] =
+        item.subject_ids.split(",");
     } else {
       newObject[item.speciality_code] = {};
-      newObject[item.speciality_code][item.subject_status] = item.subject_ids.split(',');
+      newObject[item.speciality_code][item.subject_status] =
+        item.subject_ids.split(",");
     }
-  })
+  });
 
   return newObject;
 };
 
 const FacultyFinder = () => {
-
   const { register, handleSubmit, setValue, control } = useForm();
   const [mainSubject, setMainSubject] = useState(mainSubjects[0]?.id);
   const [loaded, setLoaded] = useState(false);
@@ -67,47 +74,50 @@ const FacultyFinder = () => {
   const [subjects, setSubjects] = useState([]);
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [specialities, setSpecialities] = useState([]);
-  const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] = useState({});
+  const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] =
+    useState({});
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
 
-
   const onSubmit = async (formData) => {
-
     setSearchResults([]);
     setSearchLoading(true);
 
     const universities = await getUniversities({
       city: formData.cities.value,
-      speciality: formData.specialities.value
+      speciality: formData.specialities.value,
     });
 
     const universitiesWithFaculties = [];
 
     if (universities?.data.length) {
-      universities.data.forEach(university => {
+      universities.data.forEach((university) => {
         getFaculties({
           university: university.id,
-          speciality: formData.specialities.value
-        }).then((faculties) => {
-          universitiesWithFaculties.push({
-            ...university,
-            faculties: faculties.data
+          speciality: formData.specialities.value,
+        })
+          .then((faculties) => {
+            universitiesWithFaculties.push({
+              ...university,
+              faculties: faculties.data,
+            });
+          })
+          .finally(() => {
+            setTimeout(() => {
+              setSearchLoading(false);
+              setSearchResults(universitiesWithFaculties);
+            }, 2000);
           });
-        }).finally(() => {
-          setTimeout(() => {
-            setSearchLoading(false);
-            setSearchResults(universitiesWithFaculties);
-          }, 2000)
-        });
       });
     }
-  }
+  };
 
   const handleSelectedSubjects = (subjectId, selected) => {
     if (selected) setSelectedSubjects([...selectedSubjects, String(subjectId)]);
     else {
-      const updatedSubjects = selectedSubjects.filter(ss => ss !== String(subjectId));
+      const updatedSubjects = selectedSubjects.filter(
+        (ss) => ss !== String(subjectId)
+      );
       setSelectedSubjects(updatedSubjects);
     }
   };
@@ -115,21 +125,35 @@ const FacultyFinder = () => {
   const getFilteredSpecialities = () => {
     if (selectedSubjects.length) {
       // eslint-disable-next-line array-callback-return
-      return specialities.filter(item => {
+      return specialities.filter((item) => {
         // todo: optimize the IF hell bellow
         if (specialitiesWithGroupedSubjects[item.value]) {
-          if (specialitiesWithGroupedSubjects[item.value].main.includes(mainSubject)) {
+          if (
+            specialitiesWithGroupedSubjects[item.value].main.includes(
+              mainSubject
+            )
+          ) {
             if (specialitiesWithGroupedSubjects[item.value]?.mandatory) {
-              if (multipleExist(selectedSubjects, specialitiesWithGroupedSubjects[item.value].mandatory)) {
+              if (
+                multipleExist(
+                  selectedSubjects,
+                  specialitiesWithGroupedSubjects[item.value].mandatory
+                )
+              ) {
                 if (specialitiesWithGroupedSubjects[item.value]?.optional) {
-                  if (someOfMultipleExist(selectedSubjects, specialitiesWithGroupedSubjects[item.value].optional)) {
+                  if (
+                    someOfMultipleExist(
+                      selectedSubjects,
+                      specialitiesWithGroupedSubjects[item.value].optional
+                    )
+                  ) {
                     return item;
                   }
-                }/* else {
+                } /* else {
                   return item;
                 }*/
               }
-            }/* else {
+            } /* else {
               return item;
             }*/
           }
@@ -156,36 +180,75 @@ const FacultyFinder = () => {
 
       setCities(normalizeDataForSelectElement(citiesData));
       // todo: remove hardcoded filer when response from the backend will be improved
-      setSubjects(subjectsData.filter(subject => ![1, 29].includes(subject.id)));
+      setSubjects(
+        subjectsData.filter((subject) => ![1, 29].includes(subject.id))
+      );
       setSpecialities(
         normalizeDataForSelectElement(
-          specialitiesData.filter(speciality => speciality.parent === 0),
+          specialitiesData.filter((speciality) => speciality.parent === 0),
           true,
           {
-            name: 'name',
-            id: 'code'
+            name: "name",
+            id: "code",
           }
-        ),
+        )
       );
-      const normalizedSpecialitiesWithGroupedSubjects = normalizeSpecialitiesWithGroupedSubjects(specialitiesWithGroupedSubjectsData);
-      setSpecialitiesWithGroupedSubjects(normalizedSpecialitiesWithGroupedSubjects);
+      const normalizedSpecialitiesWithGroupedSubjects =
+        normalizeSpecialitiesWithGroupedSubjects(
+          specialitiesWithGroupedSubjectsData
+        );
+      setSpecialitiesWithGroupedSubjects(
+        normalizedSpecialitiesWithGroupedSubjects
+      );
     };
     fetchData().finally(() => setLoaded(true));
   }, []);
 
   useEffect(() => {
-    setValue('specialities', '');
+    setValue("specialities", "");
   }, [selectedSubjects]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="faculty-finder-container">
       <div className="faculty-finder">
-        {
-          !loaded
-            // todo: implement <Loading> component
-            ? <h3>Loading...</h3>
-            : (
+        {!loaded ? (
+          // Loader
+          <div class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        ) : (
+          // Result
+          <div>
+            <nav>
+              <ul class="top-nav">
+                <li>
+                  <a href="http://localhost:3000/">Головна</a>
+                </li>
+                <li>
+                  <a href="#about">Про нас</a>
+                </li>
+                <li>
+                  <a href="#contact">Контакт</a>
+                </li>
+              </ul>
+            </nav>
+
+            <header>
+              <h1 class="main-h">Знайди свою майбутню спеціальність!</h1>
+            </header>
+
+            <main>
               <form onSubmit={handleSubmit(onSubmit)}>
+                <h2 class="subjects-h">
+                  Натисни на предмети, з яких склав ЗНО
+                </h2>
                 <ToggleSwitch
                   data={mainSubjects}
                   selected={mainSubject}
@@ -194,78 +257,106 @@ const FacultyFinder = () => {
                   setValue={setValue}
                   fieldName="mainSubject"
                 />
-
-                <Box sx={{ display: 'flex' }}>
-                  <FormControl sx={{ m: 2 }} component="fieldset" variant="standard">
-                    <FormGroup>
-                      {subjects.slice(0, subjects.length / 2).map(subject => (
-                        <FormControlLabel
-                          key={subject.id}
-                          control={
-                            <Checkbox
-                              name={subject.name}
-                              value={subject.id}
-                              onClick={(event) => handleSelectedSubjects(subject.id, event.target.checked)}
-                              {...register('subjects')}
+                {/* Checkboxes */}
+                <div class="checkboxes-div">
+                  <Box sx={{ display: "flex" }}>
+                    <FormControl
+                      sx={{ m: 2 }}
+                      component="fieldset"
+                      variant="standard"
+                    >
+                      <FormGroup>
+                        {subjects
+                          .slice(0, subjects.length / 2)
+                          .map((subject) => (
+                            <FormControlLabel
+                              key={subject.id}
+                              control={
+                                <Checkbox
+                                  name={subject.name}
+                                  value={subject.id}
+                                  onClick={(event) =>
+                                    handleSelectedSubjects(
+                                      subject.id,
+                                      event.target.checked
+                                    )
+                                  }
+                                  {...register("subjects")}
+                                />
+                              }
+                              label={subject.name}
                             />
-                          }
-                          label={subject.name}
-                        />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                  <FormControl sx={{ m: 2 }} component="fieldset" variant="standard">
-                    <FormGroup>
-                      {subjects.slice(subjects.length / 2).map(subject => (
-                        <FormControlLabel
-                          key={subject.id}
-                          control={
-                            <Checkbox
-                              name={subject.name}
-                              value={subject.id}
-                              onClick={(event) => handleSelectedSubjects(subject.id, event.target.checked)}
-                              {...register('subjects')}
-                            />
-                          }
-                          label={subject.name}
-                        />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                </Box>
+                          ))}
+                      </FormGroup>
+                    </FormControl>
+                    <FormControl
+                      sx={{ m: 2 }}
+                      component="fieldset"
+                      variant="standard"
+                    >
+                      <FormGroup>
+                        {subjects.slice(subjects.length / 2).map((subject) => (
+                          <FormControlLabel
+                            key={subject.id}
+                            control={
+                              <Checkbox
+                                name={subject.name}
+                                value={subject.id}
+                                onClick={(event) =>
+                                  handleSelectedSubjects(
+                                    subject.id,
+                                    event.target.checked
+                                  )
+                                }
+                                {...register("subjects")}
+                              />
+                            }
+                            label={subject.name}
+                          />
+                        ))}
+                      </FormGroup>
+                    </FormControl>
+                  </Box>
+                </div>
 
+                <h2 class="city-specialty-h">Обери місто та спеціальність</h2>
+                <p>Місто</p>
                 <Controller
                   name="cities"
                   control={control}
-                  render={({ field }) =>
+                  render={({ field }) => (
                     <Select
                       {...field}
                       options={cities}
-                      placeholder="Оберіть місто"
-                    />}
+                      placeholder="Львів, Київ, Харків"
+                    />
+                  )}
                 />
-
-                <div style={{ marginTop: '20px' }}>
+                <div style={{ marginTop: "20px" }}>
+                  <p>Спеціальність</p>
                   <Controller
                     name="specialities"
                     control={control}
-                    render={({ field }) =>
+                    render={({ field }) => (
                       <Select
                         {...field}
                         options={getFilteredSpecialities()}
-                        placeholder="Оберіть спеціальність"
-                      />}
+                        placeholder="Комп'ютерні науки, Філософія"
+                      />
+                    )}
                   />
                 </div>
-
-                <div style={{ marginTop: '20px' }}>
-                  <Button type="submit">Підібрати</Button>
+                <div style={{ marginTop: "20px" }}>
+                  <Button type="submit">Шукати</Button>
                 </div>
               </form>
-            )
-        }
-        <FacultyFinderResults loading={searchLoading} searchResults={searchResults} />
-
+            </main>
+          </div>
+        )}
+        <FacultyFinderResults
+          loading={searchLoading}
+          searchResults={searchResults}
+        />
       </div>
     </div>
   );

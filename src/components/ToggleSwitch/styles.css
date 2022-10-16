@@ -6,8 +6,8 @@ section {
 .switch {
   position: relative;
   margin: 20px auto;
-  height: 26px;
-  background: #99FFCC;
+  height: 40px;
+  background: rgba(149, 174, 243, 0.577);
   border-radius: 20px;
   padding: 3px;
 }
@@ -23,7 +23,7 @@ section {
   width: 50%;
   height: 26px;
   text-align: center;
-  padding-top: 3px;
+  padding-top: 7px;
   z-index: 2;
   cursor: pointer;
 }
@@ -34,10 +34,11 @@ section {
   top: 0;
   left: 0;
   width: 50%;
-  background: #2fff96;
-  height: 30px;
+  background: rgba(76, 102, 166, 0.63);
+  height: 46px;
   border-radius: 20px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 1;
   -webkit-transition: 0.15s ease-out;
   -moz-transition: 0.15s ease-out;
@@ -45,6 +46,6 @@ section {
   transition: 0.15s ease-out;
 }
 
-.switch input[type=checkbox]:checked + .selection {
+.switch input[type="checkbox"]:checked + .selection {
   left: 50%;
 }

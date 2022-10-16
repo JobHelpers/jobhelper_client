@@ -1,0 +1,22 @@
+.main-h {
+  color: rgb(38, 41, 107);
+  font-size: 36px;
+  background-color: rgba(88, 162, 181, 0.203);
+  border-radius: 40px;
+  padding: 30px;
+  text-align: center;
+
+  animation: main-h-anim 3s ease-out infinite;
+}
+
+@keyframes main-h-anim {
+  0% {
+    background-color: rgba(88, 162, 181, 0.203);
+  }
+  50% {
+    background-color: rgb(147, 208, 225);
+  }
+  100% {
+    background-color: rgba(88, 162, 181, 0.203);
+  }
+}

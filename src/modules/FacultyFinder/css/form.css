@@ -1,0 +1,38 @@
+.faculty-finder-container label {
+  font-size: 20px;
+}
+
+.subjects-h {
+  font-size: 24px;
+  margin: 150px 0 50px 0;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.268);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.city-specialty-h {
+  margin: 70px 0 50px 0;
+  font-size: 24px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.268);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.find-btn {
+  text-align: center;
+}
+
+.checkboxes-div {
+  margin-left: 120px;
+}
+
+.faculty-finder-container {
+  display: flex;
+  justify-content: center;
+}
+
+.faculty-finder {
+  width: 600px;
+}
