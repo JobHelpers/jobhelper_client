@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 
 const bodySendData = ['put', 'post', 'patch'];
 const querySendData = ['get', 'delete'];
@@ -21,6 +22,9 @@ export function httpInstanceConfig({
     },
     method,
     params: querySendData.includes(method) ? params : null,
+    paramsSerializer: params => {
+      return qs.stringify(params, { indices: false })
+    },
     transformRequest: [
       (data, oldHeaders) => {
         excludedHeaders?.forEach((item) => {

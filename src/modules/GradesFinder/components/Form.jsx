@@ -1,18 +1,32 @@
 import { useForm, Controller } from "react-hook-form";
 import Select from 'react-select'
 
-export const Form = ({subjects, mandatorySubjects}) => {
-  const { register, control, handleSubmit } = useForm();
+export const Form = ({
+  subjects,
+  mandatorySubjects,
+  specialities,
+  cities,
+  universities,
+  setSelectedCity,
+  setSelectedSpeciality,
+  onSubmitForm
+}) => {
+  const { register, control, handleSubmit } = useForm({
+    mandatorySubjects: 1
+  });
 
-  const onSubmit = data => console.log(data);
+  const handleChangeCity = (data, nativeOnChange) => {
+    nativeOnChange(data);
+    setSelectedCity(data)
+  };
 
-  const cityOptions = [
-    { value: 'Lviv', label: 'Lviv' },
-    { value: 'Kyiv', label: 'Kyiv' },
-  ]
+  const handleChangeSpeciality = (data, nativeOnChange) => {
+    nativeOnChange(data);
+    setSelectedSpeciality(data)
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmitForm)}>
       <div className="row mt-5">
         <div className="col">
           <h4>Оберіть конкурсні предмети та  вкажіть ваші бали</h4>
@@ -21,11 +35,19 @@ export const Form = ({subjects, mandatorySubjects}) => {
             <div className="col">
 
               <div className="form-check">
-                <input className="form-check-input" type="radio" name="mandatorySubjects" id={`mandatorySubject_${mandatorySubjects[0]?.id}`}/>
-                {...register(`mandatorySubjects.${mandatorySubjects[0]?.id}`)}
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  checked
+                  name="mandatorySubjects"
+                  value={mandatorySubjects[0]?.id}
+                  id={`mandatorySubject_${mandatorySubjects[0]?.id}`}
+                  {...register(`mandatorySubjects`)}
+                />
                   <label className="form-check-label" htmlFor={`mandatorySubject_${mandatorySubjects[0]?.id}`}>
                     {mandatorySubjects[0]?.name}
                   </label>
+                <input type="number" {...register(`subjects_grades.${mandatorySubjects[0]?.id}`)} />
               </div>
 
               {
@@ -49,11 +71,18 @@ export const Form = ({subjects, mandatorySubjects}) => {
             </div>
             <div className="col">
               <div className="form-check">
-                <input className="form-check-input" type="radio" name="mandatorySubjects" id={`mandatorySubject_${mandatorySubjects[1]?.id}`}/>
-                {...register(`mandatorySubjects.${mandatorySubjects[1]?.id}`)}
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="mandatorySubjects"
+                  value={mandatorySubjects[1]?.id}
+                  id={`mandatorySubject_${mandatorySubjects[1]?.id}`}
+                  {...register(`mandatorySubjects`)}
+                />
                 <label className="form-check-label" htmlFor={`mandatorySubject_${mandatorySubjects[1]?.id}`}>
                   {mandatorySubjects[1]?.name}
                 </label>
+                <input type="number" {...register(`subjects_grades.${mandatorySubjects[1]?.id}`)} />
               </div>
               {
                 subjects.slice(4, 8).map((item) => {
@@ -87,8 +116,9 @@ export const Form = ({subjects, mandatorySubjects}) => {
             control={control}
             render={({ field }) => <Select
               {...field}
+              onChange={data => handleChangeSpeciality(data, field.onChange)}
               placeholder="Оберіть спеціальність"
-              options={cityOptions}
+              options={specialities}
             />}
           />
 
@@ -97,11 +127,16 @@ export const Form = ({subjects, mandatorySubjects}) => {
           <Controller
             name="city"
             control={control}
-            render={({ field }) => <Select
-              {...field}
-              placeholder="Оберіть місто"
-              options={cityOptions}
-            />}
+            render={({ field }) => {
+              return (
+                <Select
+                  {...field}
+                  onChange={data => handleChangeCity(data, field.onChange)}
+                  placeholder="Оберіть місто"
+                  options={cities}
+                />
+              );
+            }}
           />
         </div>
       </div>
@@ -109,13 +144,13 @@ export const Form = ({subjects, mandatorySubjects}) => {
       <div className="row mt-5">
         <div className="col">
           <Controller
-            name="univercities"
+            name="universities"
             control={control}
             render={({ field }) => <Select
               {...field}
               isMulti
               placeholder="Оберіть Університети"
-              options={cityOptions}
+              options={universities}
             />}
           />
         </div>

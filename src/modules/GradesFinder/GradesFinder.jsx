@@ -1,31 +1,91 @@
 import {useEffect, useState} from 'react'
+import {isEmpty} from 'lodash'
 
 import * as api from 'api'
-import {getSubjects, getMandatorySubjects} from './utils'
+import {getSubjects, getMandatorySubjects, normalizeSelectOptions, specialityDTO, universitiesDTO} from './utils'
 import { Form } from './components';
 
 const GradesFinder = () => {
   const [subjects, setSubjects] = useState([])
   const [mandatorySubjects, setMandatorySubjects] = useState([])
+  const [specialities, setSpecialities] = useState([])
+  const [cities, setCities] = useState([])
+  const [universities, setUniversities] = useState([])
+  const [selectedCity, setSelectedCity] = useState({})
+  const [selectedSpeciality, setSelectedSpeciality] = useState({})
+  const [loaded, setLoaded] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [faculties, setFaculties] = useState([])
 
-  useEffect(()=>{
-    api.getSubjects()
-    .then(({data})=>{
-      setSubjects(getSubjects(data));
-      setMandatorySubjects(getMandatorySubjects(data))
-    })
-    .catch((error)=>{
-        console.log(error);
+  const onSubmitForm = (data) => {
+    console.log(data);
+    const specialityCode = specialityDTO(data);
+    const universityId = universitiesDTO(data);
+    const queryParams = {
+      specialityCode,
+      universityId
     }
-  )
-  }, [])
+    api.getFacultiesGrades(queryParams).then(({data}) => {
+      setError('');
+      setFaculties(data[0]);
+    }).catch(e => setError(e.message))
+  };
+
+  useEffect(() => {
+    setLoading(true)
+    Promise.all([api.getSubjects(), api.getSpecialities(), api.getCities()])
+      .then(([
+        {data:fetchedSubjects},
+        {data:fetchedSpecialities},
+        {data:fetchedCities},
+      ]) => {
+        setSubjects(getSubjects(fetchedSubjects));
+        setMandatorySubjects(getMandatorySubjects(fetchedSubjects));
+        setSpecialities(normalizeSelectOptions(fetchedSpecialities));
+        setCities(normalizeSelectOptions(fetchedCities));
+        setLoaded(true);
+      })
+      .catch(error => console.log(error))
+      .finally(() => setLoading(false))
+  }, []);
+
+  useEffect(() => {
+    if (!isEmpty(selectedCity) && !isEmpty(selectedSpeciality)) {
+      api.getUniversities({city:selectedCity.value, speciality: selectedSpeciality.value})
+        .then(({data}) => setUniversities(normalizeSelectOptions(data)))
+    }
+  }, [selectedCity, selectedSpeciality]);
 
   return (
-    <div className="container">
-      <h1>Бюджет чи контракт?</h1>
-      <h3>Допоможемо правильно розставити пріоритети</h3>
-      <Form subjects={subjects} mandatorySubjects={mandatorySubjects}/>
-    </div>
+    <>
+      {loading ? (<div>Loading...</div>) : null}
+      {!isEmpty(error) ? error : null}
+      {
+        loaded
+          ? (
+            <div className="container">
+              <h1>Бюджет чи контракт?</h1>
+              <h3>Допоможемо правильно розставити пріоритети</h3>
+              <Form
+                subjects={subjects}
+                mandatorySubjects={mandatorySubjects}
+                specialities={specialities}
+                cities={cities}
+                universities={universities}
+                setSelectedCity={setSelectedCity}
+                setSelectedSpeciality={setSelectedSpeciality}
+                onSubmitForm={onSubmitForm}
+              />
+            </div>
+          ) : null
+      }
+      {
+        faculties.length ? faculties.map(faculty => (
+          <div key={faculty.id}>{faculty.name}</div>
+        )) : null
+      }
+    </>
   );
 };
 
