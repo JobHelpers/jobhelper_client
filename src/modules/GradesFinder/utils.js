@@ -1,11 +1,13 @@
-const mandatorySubjects = [1, 29]
+import {isUndefined, omitBy, isEmpty} from 'lodash';
+
+const mainSubjects = [1, 29]
 
 export const getSubjects = (data) => {
-  return data.filter((item) => !mandatorySubjects.includes(Number(item.id)));
+  return data.filter((item) => !mainSubjects.includes(Number(item.id)));
 }
 
-export const getMandatorySubjects = (data) => {
-  return data.filter((item) => mandatorySubjects.includes(Number(item.id)));
+export const getMainSubjects = (data) => {
+  return data.filter((item) => mainSubjects.includes(Number(item.id)));
 }
 
 export const normalizeSelectOptions = (data) => {
@@ -23,4 +25,9 @@ export const specialityDTO = (data) => {
 
 export const universitiesDTO = (data) => {
   return data.universities.map(item => item.value);
+};
+
+export const joinGroupedSpecialitiesSubjects = (specialitiesSubjects) => {
+
+  return specialitiesSubjects;
 };

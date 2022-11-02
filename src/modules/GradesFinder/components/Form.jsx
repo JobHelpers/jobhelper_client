@@ -1,18 +1,25 @@
 import { useForm, Controller } from "react-hook-form";
 import Select from 'react-select'
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 export const Form = ({
   subjects,
-  mandatorySubjects,
+  mainSubjects,
   specialities,
   cities,
   universities,
   setSelectedCity,
   setSelectedSpeciality,
-  onSubmitForm
+  onSubmitForm,
+  setSelectedSubjects,
+  selectedSubjects
 }) => {
+
+
+
   const { register, control, handleSubmit } = useForm({
-    mandatorySubjects: 1
+    mainSubjects: 1
   });
 
   const handleChangeCity = (data, nativeOnChange) => {
@@ -23,6 +30,15 @@ export const Form = ({
   const handleChangeSpeciality = (data, nativeOnChange) => {
     nativeOnChange(data);
     setSelectedSpeciality(data)
+  };
+
+  const handleSubjectClick = (event, subjectId) => {
+    if (event.target.checked) {
+      setSelectedSubjects([...selectedSubjects, subjectId]);
+    } else {
+      const filteredSubjects = selectedSubjects.filter(item => item !== subjectId)
+      setSelectedSubjects(filteredSubjects)
+    }
   };
 
   return (
@@ -39,30 +55,33 @@ export const Form = ({
                   className="form-check-input"
                   type="radio"
                   checked
-                  name="mandatorySubjects"
-                  value={mandatorySubjects[0]?.id}
-                  id={`mandatorySubject_${mandatorySubjects[0]?.id}`}
-                  {...register(`mandatorySubjects`)}
+                  name="mainSubject"
+                  value={mainSubjects[0]?.id}
+                  id={`mainSubject_${mainSubjects[0]?.id}`}
+                  {...register(`mainSubject`)}
                 />
-                  <label className="form-check-label" htmlFor={`mandatorySubject_${mandatorySubjects[0]?.id}`}>
-                    {mandatorySubjects[0]?.name}
+                  <label className="form-check-label" htmlFor={`mainSubject_${mainSubjects[0]?.id}`}>
+                    {mainSubjects[0]?.name}
                   </label>
-                <input type="number" {...register(`subjects_grades.${mandatorySubjects[0]?.id}`)} />
+                <input type="number" {...register(`subjects_grades.${mainSubjects[0]?.id}`)} />
               </div>
 
               {
                 subjects.slice(0, 4).map((item) => {
                   return (
                     <div key={item.id} className="form-check">
-                      <input
-                        {...register(`subjects.${item.id}`)}
-                        className="form-check-input"
-                        type="checkbox" value=""
-                        id={`subject_${item.id}`}
+                      <FormControlLabel
+                        key={item.id}
+                        control={
+                          <Checkbox
+                            name={item.name}
+                            value={item.id}
+                            onClick={(event) => handleSubjectClick(event, item.id)}
+                            {...register('subjects')}
+                          />
+                        }
+                        label={item.name}
                       />
-                      <label className="form-check-label" htmlFor={`subject_${item.id}`}>
-                        {item.name}
-                      </label>
                       <input type="number" {...register(`subjects_grades.${item.id}`)} />
                     </div>
                   )
@@ -74,29 +93,32 @@ export const Form = ({
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="mandatorySubjects"
-                  value={mandatorySubjects[1]?.id}
-                  id={`mandatorySubject_${mandatorySubjects[1]?.id}`}
-                  {...register(`mandatorySubjects`)}
+                  name="mainSubject"
+                  value={mainSubjects[1]?.id}
+                  id={`mainSubject_${mainSubjects[1]?.id}`}
+                  {...register(`mainSubject`)}
                 />
-                <label className="form-check-label" htmlFor={`mandatorySubject_${mandatorySubjects[1]?.id}`}>
-                  {mandatorySubjects[1]?.name}
+                <label className="form-check-label" htmlFor={`mainSubject_${mainSubjects[1]?.id}`}>
+                  {mainSubjects[1]?.name}
                 </label>
-                <input type="number" {...register(`subjects_grades.${mandatorySubjects[1]?.id}`)} />
+                <input type="number" {...register(`subjects_grades.${mainSubjects[1]?.id}`)} />
               </div>
               {
                 subjects.slice(4, 8).map((item) => {
                   return (
                     <div key={item.id} className="form-check">
-                      <input
-                        {...register(`subjects.${item.id}`)}
-                        className="form-check-input"
-                        type="checkbox" value=""
-                        id={`subject_${item.id}`}
+                      <FormControlLabel
+                        key={item.id}
+                        control={
+                          <Checkbox
+                            name={item.name}
+                            value={item.id}
+                            onClick={(event) => handleSubjectClick(event, item.id)}
+                            {...register('subjects')}
+                          />
+                        }
+                        label={item.name}
                       />
-                      <label className="form-check-label" htmlFor={`subject_${item.id}`}>
-                        {item.name}
-                      </label>
                       <input type="number" {...register(`subjects_grades.${item.id}`)} />
                     </div>
                   )
@@ -104,13 +126,21 @@ export const Form = ({
               }
             </div>
           </div>
-
-
         </div>
       </div>
 
       <div className="row mt-5">
-        <div className="col">
+        <div className="col" style={{position: 'relative'}}>
+          <div
+            style={{
+              position: 'absolute',
+              top: '7px',
+              right: '60px',
+              zIndex: 100,
+              color: 'lightgray'
+          }}>
+            {specialities.length}
+          </div>
           <Controller
             name="speciality"
             control={control}
