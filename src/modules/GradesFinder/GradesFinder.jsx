@@ -11,7 +11,7 @@ import {
   specialityHasSubjects,
   universitiesDTO
 } from './utils'
-import {Form} from './components';
+import {Form, Faculties} from './components';
 
 const GradesFinder = () => {
   const [subjects, setSubjects] = useState([])
@@ -23,13 +23,17 @@ const GradesFinder = () => {
   const [selectedCity, setSelectedCity] = useState({})
   const [selectedSpeciality, setSelectedSpeciality] = useState({})
   const [selectedSubjects, setSelectedSubjects] = useState([])
+  const [selectedMainSubject, setSelectedMainSubject] = useState(0)
   const [loaded, setLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [faculties, setFaculties] = useState([])
   const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] = useState([])
+  const [subjectGrades, setSubjectGrades] = useState({})
 
   const onSubmitForm = (data) => {
+    console.log(data);
+    setSubjectGrades(data.subjectsGrades)
     const specialityCode = specialityDTO(data);
     const universityId = universitiesDTO(data);
     const queryParams = {
@@ -56,8 +60,11 @@ const GradesFinder = () => {
         {data:fetchedCities},
         {data:fetchedSpecialitiesWithGroupedSubjects},
       ]) => {
+        const fetchedMainSubjects = getMainSubjects(fetchedSubjects)
         setSubjects(getSubjects(fetchedSubjects));
-        setMainSubjects(getMainSubjects(fetchedSubjects));
+        setMainSubjects(fetchedMainSubjects);
+        //todo:еалізувати запис вибраного main subject`a
+        setSelectedMainSubject(fetchedMainSubjects[0].id)
         setSpecialities(normalizeSelectOptions(fetchedSpecialities));
         setInitialSpecialities(normalizeSelectOptions(fetchedSpecialities));
         setCities(normalizeSelectOptions(fetchedCities));
@@ -115,9 +122,11 @@ const GradesFinder = () => {
           ) : null
       }
       {
-        faculties.length ? faculties.map(faculty => (
-          <div key={faculty.id}>{faculty.name}</div>
-        )) : null
+        faculties.length ? <Faculties
+          faculties={faculties}
+          selectedSubjects={[...selectedSubjects, selectedMainSubject]}
+          subjectGrades={subjectGrades}
+        /> : null
       }
     </>
   );

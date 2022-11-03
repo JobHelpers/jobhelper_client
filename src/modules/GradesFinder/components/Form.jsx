@@ -62,7 +62,7 @@ export const Form = ({
                   <label className="form-check-label" htmlFor={`mainSubject_${mainSubjects[0]?.id}`}>
                     {mainSubjects[0]?.name}
                   </label>
-                <input type="number" {...register(`subjects_grades.${mainSubjects[0]?.id}`)} />
+                <input type="number" {...register(`subjectsGrades.${mainSubjects[0]?.id}`)} />
               </div>
 
               {
@@ -81,7 +81,7 @@ export const Form = ({
                         }
                         label={item.name}
                       />
-                      <input type="number" {...register(`subjects_grades.${item.id}`)} />
+                      <input type="number" {...register(`subjectsGrades.${item.id}`)} />
                     </div>
                   )
                 })
@@ -100,7 +100,7 @@ export const Form = ({
                 <label className="form-check-label" htmlFor={`mainSubject_${mainSubjects[1]?.id}`}>
                   {mainSubjects[1]?.name}
                 </label>
-                <input type="number" {...register(`subjects_grades.${mainSubjects[1]?.id}`)} />
+                <input type="number" {...register(`subjectsGrades.${mainSubjects[1]?.id}`)} />
               </div>
               {
                 subjects.slice(4, 8).map((item) => {
@@ -118,7 +118,7 @@ export const Form = ({
                         }
                         label={item.name}
                       />
-                      <input type="number" {...register(`subjects_grades.${item.id}`)} />
+                      <input type="number" {...register(`subjectsGrades.${item.id}`)} />
                     </div>
                   )
                 })
