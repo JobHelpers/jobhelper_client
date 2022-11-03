@@ -54,7 +54,6 @@ export const Form = ({
                 <input
                   className="form-check-input"
                   type="radio"
-                  checked
                   name="mainSubject"
                   value={mainSubjects[0]?.id}
                   id={`mainSubject_${mainSubjects[0]?.id}`}

@@ -3,18 +3,20 @@ import {isEmpty} from 'lodash'
 
 import * as api from 'api'
 import {
-  getSubjects,
   getMainSubjects,
+  getSubjects,
+  joinGroupedSpecialitiesSubjects,
   normalizeSelectOptions,
   specialityDTO,
-  universitiesDTO,
-  joinGroupedSpecialitiesSubjects
+  specialityHasSubjects,
+  universitiesDTO
 } from './utils'
-import { Form } from './components';
+import {Form} from './components';
 
 const GradesFinder = () => {
   const [subjects, setSubjects] = useState([])
   const [mainSubjects, setMainSubjects] = useState([])
+  const [initialSpecialities, setInitialSpecialities] = useState([])
   const [specialities, setSpecialities] = useState([])
   const [cities, setCities] = useState([])
   const [universities, setUniversities] = useState([])
@@ -28,7 +30,6 @@ const GradesFinder = () => {
   const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] = useState([])
 
   const onSubmitForm = (data) => {
-    console.log(data);
     const specialityCode = specialityDTO(data);
     const universityId = universitiesDTO(data);
     const queryParams = {
@@ -58,6 +59,7 @@ const GradesFinder = () => {
         setSubjects(getSubjects(fetchedSubjects));
         setMainSubjects(getMainSubjects(fetchedSubjects));
         setSpecialities(normalizeSelectOptions(fetchedSpecialities));
+        setInitialSpecialities(normalizeSelectOptions(fetchedSpecialities));
         setCities(normalizeSelectOptions(fetchedCities));
         setSpecialitiesWithGroupedSubjects(joinGroupedSpecialitiesSubjects(fetchedSpecialitiesWithGroupedSubjects));
         setLoaded(true);
@@ -74,12 +76,14 @@ const GradesFinder = () => {
   }, [selectedCity, selectedSpeciality]);
 
   useEffect(() => {
-    // console.log('selectedSubjects',selectedSubjects);
-
     if (!selectedSubjects.length) {
-      setSpecialities(specialities)
+      setSpecialities(initialSpecialities)
     } else {
-
+        const filteredSpecialities = initialSpecialities.filter(item => {
+          //todo: change hardcoded mainSubject argument
+          return specialityHasSubjects(specialitiesWithGroupedSubjects, item.value, 1, selectedSubjects);
+        });
+      setSpecialities(filteredSpecialities);
     }
 
 
