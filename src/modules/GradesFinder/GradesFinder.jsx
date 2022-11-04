@@ -32,7 +32,7 @@ const GradesFinder = () => {
   const [subjectGrades, setSubjectGrades] = useState({})
 
   const onSubmitForm = (data) => {
-    console.log(data);
+    //console.log(data);
     setSubjectGrades(data.subjectsGrades)
     const specialityCode = specialityDTO(data);
     const universityId = universitiesDTO(data);
@@ -64,7 +64,7 @@ const GradesFinder = () => {
         setSubjects(getSubjects(fetchedSubjects));
         setMainSubjects(fetchedMainSubjects);
         //todo:еалізувати запис вибраного main subject`a
-        setSelectedMainSubject(fetchedMainSubjects[0].id)
+        setSelectedMainSubject(fetchedMainSubjects[1].id)
         setSpecialities(normalizeSelectOptions(fetchedSpecialities));
         setInitialSpecialities(normalizeSelectOptions(fetchedSpecialities));
         setCities(normalizeSelectOptions(fetchedCities));
@@ -91,6 +91,7 @@ const GradesFinder = () => {
           return specialityHasSubjects(specialitiesWithGroupedSubjects, item.value, 1, selectedSubjects);
         });
       setSpecialities(filteredSpecialities);
+      console.log(filteredSpecialities);
     }
 
 
