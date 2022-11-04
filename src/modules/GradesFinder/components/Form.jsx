@@ -2,6 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import Select from 'react-select'
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import {useState} from "react";
 
 export const Form = ({
   subjects,
@@ -13,14 +14,20 @@ export const Form = ({
   setSelectedSpeciality,
   onSubmitForm,
   setSelectedSubjects,
-  selectedSubjects
+  selectedSubjects,
+  setSelectedMainSubject
 }) => {
 
-
+const [checkedMainSubject, setCheckedMainSubject] = useState(mainSubjects[0].id);
 
   const { register, control, handleSubmit } = useForm({
-    mainSubjects: 1
+    mainSubjects: mainSubjects[0].id
   });
+
+  const handleClickOnMainSubject = (event, id) => {
+    setCheckedMainSubject(id);
+    setSelectedMainSubject(id)
+  }
 
   const handleChangeCity = (data, nativeOnChange) => {
     nativeOnChange(data);
@@ -45,6 +52,7 @@ export const Form = ({
     <form onSubmit={handleSubmit(onSubmitForm)}>
       <div className="row mt-5">
         <div className="col">
+          <div>{checkedMainSubject}</div>
           <h4>Оберіть конкурсні предмети та  вкажіть ваші бали</h4>
 
           <div className="row">
@@ -52,6 +60,10 @@ export const Form = ({
 
               <div className="form-check">
                 <input
+                  checked
+                  onClick={(e)=>{
+                    handleClickOnMainSubject(e, mainSubjects[0].id);
+                  }}
                   className="form-check-input"
                   type="radio"
                   name="mainSubject"
@@ -92,6 +104,10 @@ export const Form = ({
                 <input
                   className="form-check-input"
                   type="radio"
+
+                  onClick={(e)=>{
+                    handleClickOnMainSubject(e, mainSubjects[1].id);
+                  }}
                   name="mainSubject"
                   value={mainSubjects[1]?.id}
                   id={`mainSubject_${mainSubjects[1]?.id}`}

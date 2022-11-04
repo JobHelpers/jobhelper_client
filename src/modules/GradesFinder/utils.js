@@ -20,7 +20,7 @@ export const normalizeSelectOptions = (data) => {
 };
 
 export const specialityDTO = (data) => {
-  return data.speciality.value
+  return data.speciality.value.substring(0, 3);
 };
 
 export const universitiesDTO = (data) => {
@@ -56,6 +56,7 @@ export const joinGroupedSpecialitiesSubjects = (specialitiesSubjects) => {
 };
 
 export const specialityHasSubjects = (specialitiesSubjects, specialityCode, mainSubject, subjects) => {
+  console.log(mainSubject);
   let selectedSpecialitiesSubjects = specialitiesSubjects[specialityCode.substring(0, 6)];
   if (!selectedSpecialitiesSubjects) selectedSpecialitiesSubjects = specialitiesSubjects[specialityCode.substring(0, 3)];
   if (!selectedSpecialitiesSubjects) return false;

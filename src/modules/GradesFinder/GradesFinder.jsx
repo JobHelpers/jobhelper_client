@@ -32,7 +32,7 @@ const GradesFinder = () => {
   const [subjectGrades, setSubjectGrades] = useState({})
 
   const onSubmitForm = (data) => {
-    //console.log(data);
+    console.log(data);
     setSubjectGrades(data.subjectsGrades)
     const specialityCode = specialityDTO(data);
     const universityId = universitiesDTO(data);
@@ -63,8 +63,7 @@ const GradesFinder = () => {
         const fetchedMainSubjects = getMainSubjects(fetchedSubjects)
         setSubjects(getSubjects(fetchedSubjects));
         setMainSubjects(fetchedMainSubjects);
-        //todo:еалізувати запис вибраного main subject`a
-        setSelectedMainSubject(fetchedMainSubjects[1].id)
+        setSelectedMainSubject(fetchedMainSubjects[0].id)
         setSpecialities(normalizeSelectOptions(fetchedSpecialities));
         setInitialSpecialities(normalizeSelectOptions(fetchedSpecialities));
         setCities(normalizeSelectOptions(fetchedCities));
@@ -77,7 +76,8 @@ const GradesFinder = () => {
 
   useEffect(() => {
     if (!isEmpty(selectedCity) && !isEmpty(selectedSpeciality)) {
-      api.getUniversities({city:selectedCity.value, speciality: selectedSpeciality.value})
+      const speciality = selectedSpeciality.value.substring(0, 3)
+      api.getUniversities({city:selectedCity.value, speciality})
         .then(({data}) => setUniversities(normalizeSelectOptions(data)))
     }
   }, [selectedCity, selectedSpeciality]);
@@ -87,11 +87,9 @@ const GradesFinder = () => {
       setSpecialities(initialSpecialities)
     } else {
         const filteredSpecialities = initialSpecialities.filter(item => {
-          //todo: change hardcoded mainSubject argument
-          return specialityHasSubjects(specialitiesWithGroupedSubjects, item.value, 1, selectedSubjects);
+          return specialityHasSubjects(specialitiesWithGroupedSubjects, item.value, selectedMainSubject, selectedSubjects);
         });
       setSpecialities(filteredSpecialities);
-      console.log(filteredSpecialities);
     }
 
 
@@ -118,6 +116,7 @@ const GradesFinder = () => {
                 onSubmitForm={onSubmitForm}
                 setSelectedSubjects={setSelectedSubjects}
                 selectedSubjects={selectedSubjects}
+                setSelectedMainSubject={setSelectedMainSubject}
               />
             </div>
           ) : null

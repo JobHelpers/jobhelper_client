@@ -1,4 +1,5 @@
 import './styles.scss'
+import {TickIcon, CrossIcon} from 'components'
 
 export const Faculties = (props) => {
 
@@ -25,7 +26,7 @@ export const Faculties = (props) => {
       const coefficient = subjectCoefficient?.coefficient || 0
       avarageGrade += subjectGrades[subjectId]*coefficient
     })
-    return avarageGrade;
+    return Math.trunc(avarageGrade*1000)/1000;
   }
 
   return (
@@ -56,7 +57,13 @@ export const Faculties = (props) => {
                           <div className="col">{currentSubject.subjectName }</div>
                           <div className="col">{currentSubject.minGrade }</div>
                           <div className="col">{subjectGrades[subject]}</div>
-                          <div className="col">&nbsp;</div>
+                          <div className="col">
+                          {
+                            currentSubject.minGrade <= subjectGrades[subject]
+                            ? <TickIcon />
+                            : <CrossIcon />
+                          }
+                          </div>
                         </div>
                       </>
                     )
@@ -69,13 +76,25 @@ export const Faculties = (props) => {
               <div className="col">Бюджет</div>
               <div className="col">{item?.maxMinGrade.length ? item.maxMinGrade[0].maxMinBudget : null}</div>
               <div className="col">{countAvarageGrade(item.coefficients)}</div>
-              <div className="col">&nbsp;</div>
+              <div className="col">
+                {
+                  item?.maxMinGrade[0]?.maxMinBudget <= countAvarageGrade(item.coefficients)
+                    ? <TickIcon />
+                    : <CrossIcon />
+                }
+              </div>
             </div>
             <div className="row">
               <div className="col">Контракт</div>
               <div className="col">{item?.maxMinGrade.length ? item.maxMinGrade[0].maxMinContract : null}</div>
               <div className="col">{countAvarageGrade(item.coefficients)}</div>
-              <div className="col">&nbsp;</div>
+              <div className="col">
+                {
+                  item?.maxMinGrade[0]?.maxMinContract <= countAvarageGrade(item.coefficients)
+                    ? <TickIcon />
+                    : <CrossIcon />
+                }
+              </div>
             </div>
           </div>
         )
