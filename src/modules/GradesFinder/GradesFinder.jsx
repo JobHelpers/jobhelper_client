@@ -1,40 +1,40 @@
 import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import * as api from "api";
-import {
-  getSubjects,
-  getMandatorySubjects,
-  normalizeSelectOptions,
-  specialityDTO,
-  universitiesDTO,
-} from "./utils";
-import { Form } from "./components";
+// import {
+//   getSubjects,
+//   getMandatorySubjects,
+//   normalizeSelectOptions,
+//   specialityDTO,
+//   universitiesDTO,
+// } from "./utils";
+// import { Form } from "./components";
 
-import * as api from 'api'
 import {
   getSubjects,
   getMainSubjects,
   normalizeSelectOptions,
   specialityDTO,
   universitiesDTO,
-  joinGroupedSpecialitiesSubjects
-} from './utils'
-import { Form } from './components';
+  joinGroupedSpecialitiesSubjects,
+} from "./utils";
+import { Form } from "./components";
 
 const GradesFinder = () => {
-  const [subjects, setSubjects] = useState([])
-  const [mainSubjects, setMainSubjects] = useState([])
-  const [specialities, setSpecialities] = useState([])
-  const [cities, setCities] = useState([])
-  const [universities, setUniversities] = useState([])
-  const [selectedCity, setSelectedCity] = useState({})
-  const [selectedSpeciality, setSelectedSpeciality] = useState({})
-  const [selectedSubjects, setSelectedSubjects] = useState([])
-  const [loaded, setLoaded] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [faculties, setFaculties] = useState([])
-  const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] = useState([])
+  const [subjects, setSubjects] = useState([]);
+  const [mainSubjects, setMainSubjects] = useState([]);
+  const [specialities, setSpecialities] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [universities, setUniversities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState({});
+  const [selectedSpeciality, setSelectedSpeciality] = useState({});
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [faculties, setFaculties] = useState([]);
+  const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] =
+    useState([]);
 
   const onSubmitForm = (data) => {
     console.log(data);
@@ -54,28 +54,34 @@ const GradesFinder = () => {
   };
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     Promise.all([
       api.getSubjects(),
       api.getSpecialities(),
       api.getCities(),
-      api.getSpecialitiesWithGroupedSubjects()
+      api.getSpecialitiesWithGroupedSubjects(),
     ])
-      .then(([
-        {data:fetchedSubjects},
-        {data:fetchedSpecialities},
-        {data:fetchedCities},
-        {data:fetchedSpecialitiesWithGroupedSubjects},
-      ]) => {
-        setSubjects(getSubjects(fetchedSubjects));
-        setMainSubjects(getMainSubjects(fetchedSubjects));
-        setSpecialities(normalizeSelectOptions(fetchedSpecialities));
-        setCities(normalizeSelectOptions(fetchedCities));
-        setSpecialitiesWithGroupedSubjects(joinGroupedSpecialitiesSubjects(fetchedSpecialitiesWithGroupedSubjects));
-        setLoaded(true);
-      })
-      .catch(error => console.log(error))
-      .finally(() => setLoading(false))
+      .then(
+        ([
+          { data: fetchedSubjects },
+          { data: fetchedSpecialities },
+          { data: fetchedCities },
+          { data: fetchedSpecialitiesWithGroupedSubjects },
+        ]) => {
+          setSubjects(getSubjects(fetchedSubjects));
+          setMainSubjects(getMainSubjects(fetchedSubjects));
+          setSpecialities(normalizeSelectOptions(fetchedSpecialities));
+          setCities(normalizeSelectOptions(fetchedCities));
+          setSpecialitiesWithGroupedSubjects(
+            joinGroupedSpecialitiesSubjects(
+              fetchedSpecialitiesWithGroupedSubjects
+            )
+          );
+          setLoaded(true);
+        }
+      )
+      .catch((error) => console.log(error))
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -93,13 +99,10 @@ const GradesFinder = () => {
     // console.log('selectedSubjects',selectedSubjects);
 
     if (!selectedSubjects.length) {
-      setSpecialities(specialities)
+      setSpecialities(specialities);
     } else {
-
     }
-
-
-  }, [selectedSubjects])
+  }, [selectedSubjects]);
 
   return (
     <>
@@ -114,7 +117,7 @@ const GradesFinder = () => {
           <div className="form">
             <Form
               subjects={subjects}
-              mandatorySubjects={mandatorySubjects}
+              mainSubjects={mainSubjects}
               specialities={specialities}
               cities={cities}
               universities={universities}
