@@ -10,20 +10,31 @@ import {
 } from "./utils";
 import { Form } from "./components";
 
-import "./css/styles.css";
+import * as api from 'api'
+import {
+  getSubjects,
+  getMainSubjects,
+  normalizeSelectOptions,
+  specialityDTO,
+  universitiesDTO,
+  joinGroupedSpecialitiesSubjects
+} from './utils'
+import { Form } from './components';
 
 const GradesFinder = () => {
-  const [subjects, setSubjects] = useState([]);
-  const [mandatorySubjects, setMandatorySubjects] = useState([]);
-  const [specialities, setSpecialities] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [universities, setUniversities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState({});
-  const [selectedSpeciality, setSelectedSpeciality] = useState({});
-  const [loaded, setLoaded] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [faculties, setFaculties] = useState([]);
+  const [subjects, setSubjects] = useState([])
+  const [mainSubjects, setMainSubjects] = useState([])
+  const [specialities, setSpecialities] = useState([])
+  const [cities, setCities] = useState([])
+  const [universities, setUniversities] = useState([])
+  const [selectedCity, setSelectedCity] = useState({})
+  const [selectedSpeciality, setSelectedSpeciality] = useState({})
+  const [selectedSubjects, setSelectedSubjects] = useState([])
+  const [loaded, setLoaded] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [faculties, setFaculties] = useState([])
+  const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] = useState([])
 
   const onSubmitForm = (data) => {
     console.log(data);
@@ -43,23 +54,28 @@ const GradesFinder = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    Promise.all([api.getSubjects(), api.getSpecialities(), api.getCities()])
-      .then(
-        ([
-          { data: fetchedSubjects },
-          { data: fetchedSpecialities },
-          { data: fetchedCities },
-        ]) => {
-          setSubjects(getSubjects(fetchedSubjects));
-          setMandatorySubjects(getMandatorySubjects(fetchedSubjects));
-          setSpecialities(normalizeSelectOptions(fetchedSpecialities));
-          setCities(normalizeSelectOptions(fetchedCities));
-          setLoaded(true);
-        }
-      )
-      .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
+    setLoading(true)
+    Promise.all([
+      api.getSubjects(),
+      api.getSpecialities(),
+      api.getCities(),
+      api.getSpecialitiesWithGroupedSubjects()
+    ])
+      .then(([
+        {data:fetchedSubjects},
+        {data:fetchedSpecialities},
+        {data:fetchedCities},
+        {data:fetchedSpecialitiesWithGroupedSubjects},
+      ]) => {
+        setSubjects(getSubjects(fetchedSubjects));
+        setMainSubjects(getMainSubjects(fetchedSubjects));
+        setSpecialities(normalizeSelectOptions(fetchedSpecialities));
+        setCities(normalizeSelectOptions(fetchedCities));
+        setSpecialitiesWithGroupedSubjects(joinGroupedSpecialitiesSubjects(fetchedSpecialitiesWithGroupedSubjects));
+        setLoaded(true);
+      })
+      .catch(error => console.log(error))
+      .finally(() => setLoading(false))
   }, []);
 
   useEffect(() => {
@@ -72,6 +88,18 @@ const GradesFinder = () => {
         .then(({ data }) => setUniversities(normalizeSelectOptions(data)));
     }
   }, [selectedCity, selectedSpeciality]);
+
+  useEffect(() => {
+    // console.log('selectedSubjects',selectedSubjects);
+
+    if (!selectedSubjects.length) {
+      setSpecialities(specialities)
+    } else {
+
+    }
+
+
+  }, [selectedSubjects])
 
   return (
     <>
