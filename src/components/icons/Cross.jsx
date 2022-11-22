@@ -1,5 +1,3 @@
-import crossIcon from 'assets/cross.svg'
+import crossIcon from "assets/cross.svg";
 
-export const CrossIcon = () => (
-    <img src={crossIcon} />
-);
+export const CrossIcon = () => <img src={crossIcon} />;
