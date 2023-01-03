@@ -1,0 +1,43 @@
+.about-us-text {
+  font-family: 'Roboto Mono', monospace;
+}
+
+.headerText {
+  font-family: "Helvetica", sans-serif;
+  font-weight: bold;
+  text-align: center;
+  font-size: 100px;
+  margin: 50px;
+  background-image: linear-gradient(to right, #3c3cb6, #69cee5, #d267ce);
+  color: transparent;
+  -webkit-background-clip: text;
+  background-size: 200%;
+  background-position: -100%;
+
+  animation: headerTextAnimation 3s infinite alternate-reverse;
+}
+
+@keyframes headerTextAnimation {
+  from {
+    background-position: 0;
+  }
+  to {
+    background-position: 100%;
+  }
+}
+
+.defaultTeamDescription {
+  display: flex;
+}
+
+.our-team {
+  margin: 50px 50px;
+}
+
+.imgDefault {
+  max-width: 500px;
+  height: auto;
+  margin: 50px 50px;
+  border: solid 4px;
+  border-image: linear-gradient(#09f8ee, rgba(255, 75, 213, 0.78)) 27;
+}
