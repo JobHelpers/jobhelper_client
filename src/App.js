@@ -18,8 +18,8 @@ function App() {
       <div>
         <Routes>
           <Route path="/faculty-finder" element={<FacultyFinder />} />
-          <Route path="/" element={<GradesFinder />}></Route>
           <Route path="/about" element={<About />}></Route>
+          <Route path="/" element={<GradesFinder />}></Route>
         </Routes>
       </div>
     </div>
