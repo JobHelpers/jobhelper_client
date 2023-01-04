@@ -1,6 +1,6 @@
 .nav {
   margin-top: 12px;
-  background-color: cadetblue;
+  background: linear-gradient(to right, #5b5be0, #2ac1ea, #e885e4);
   padding: 40px 0 40px 0;
   display: flex;
   justify-content: center;
