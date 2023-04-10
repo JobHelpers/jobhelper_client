@@ -25,6 +25,7 @@ export const FacultyFinderResults = ({ searchResults, loading }) => {
           ))
           : null
       }
+      {!loading && !searchResults.length ? <h3>Not Found</h3> : null}
     </div>
   );
 };

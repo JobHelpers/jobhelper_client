@@ -110,6 +110,8 @@ const FacultyFinder = () => {
             }, 2000);
           });
       });
+    } else {
+      setSearchLoading(false);
     }
   };
 
