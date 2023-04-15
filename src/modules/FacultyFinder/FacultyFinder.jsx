@@ -79,6 +79,7 @@ const FacultyFinder = () => {
     useState({});
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [resultsLoaded, setresultsLoaded] = useState(false);
 
   const onSubmit = async (formData) => {
     setSearchResults([]);
@@ -92,6 +93,7 @@ const FacultyFinder = () => {
     const universitiesWithFaculties = [];
 
     if (universities?.data.length) {
+      setresultsLoaded(true);
       universities.data.forEach((university) => {
         getFaculties({
           university: university.id,
@@ -316,6 +318,7 @@ const FacultyFinder = () => {
           </form>
         )}
         <FacultyFinderResults
+          resultsLoading={resultsLoaded}
           loading={searchLoading}
           searchResults={searchResults}
         />
