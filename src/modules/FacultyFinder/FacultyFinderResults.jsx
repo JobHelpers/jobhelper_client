@@ -1,7 +1,7 @@
 import { UniversityIcon } from '../../components';
 import './styles.css';
 
-export const FacultyFinderResults = ({ searchResults, loading, resultsLoading }) => {
+export const FacultyFinderResults = ({ showFacultyInfo, searchResults, loading, resultsLoading }) => {
   return (
     <div className="results">
       {loading && resultsLoading? <h3>Loading...</h3> : null}
@@ -17,7 +17,7 @@ export const FacultyFinderResults = ({ searchResults, loading, resultsLoading })
                 u?.faculties?.length
                   ? (
                     <ul>
-                      {u?.faculties.map(f => <li key={f.id}>{f.name}</li>)}
+                      {u?.faculties.map(f => <li key={f.id} onClick={() => showFacultyInfo(f.id)}>{f.name}</li>)}
                     </ul>
                   ) : null
               }
