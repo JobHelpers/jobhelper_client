@@ -1,10 +1,10 @@
 import { UniversityIcon } from '../../components';
 import './styles.css';
 
-export const FacultyFinderResults = ({ showFacultyInfo, searchResults, loading, resultsLoading }) => {
+export const FacultyFinderResults = ({ showFacultyInfo, searchResults, loading, resultsLoaded }) => {
   return (
     <div className="results">
-      {loading && resultsLoading? <h3>Loading...</h3> : null}
+      {loading? <h3>Loading...</h3> : null}
       {
         searchResults?.length
           ? searchResults.map(u => (
@@ -25,8 +25,8 @@ export const FacultyFinderResults = ({ showFacultyInfo, searchResults, loading, 
           ))
           : null
       }
-      {!loading && resultsLoading && !searchResults.length ? <h3>Not Found</h3> : null}
-      {!resultsLoading? null : null}
+      {!loading && resultsLoaded && !searchResults.length ? <h3>Not Found</h3> : null}
+      {!resultsLoaded? null : null}
     </div>
   );
 };

@@ -76,11 +76,10 @@ const FacultyFinder = () => {
   const [subjects, setSubjects] = useState([]);
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [specialities, setSpecialities] = useState([]);
-  const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] =
-    useState({});
+  const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] = useState({});
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
-  const [resultsLoaded, setresultsLoaded] = useState(false);
+  const [resultsLoaded, setResultsLoaded] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedFaculty, setSelectedFaculty] = useState(null);
 
@@ -96,7 +95,6 @@ const FacultyFinder = () => {
     const universitiesWithFaculties = [];
 
     if (universities?.data.length) {
-      setresultsLoaded(true);
       universities.data.forEach((university) => {
         getFaculties({
           university: university.id,
@@ -112,6 +110,7 @@ const FacultyFinder = () => {
             setTimeout(() => {
               setSearchLoading(false);
               setSearchResults(universitiesWithFaculties);
+              setResultsLoaded(true);
             }, 2000);
           });
       });
@@ -339,7 +338,7 @@ const FacultyFinder = () => {
           )}
           <FacultyFinderResults
             showFacultyInfo={showFacultyInfo}
-            resultsLoading={resultsLoaded}
+            resultsLoaded={resultsLoaded}
             loading={searchLoading}
             searchResults={searchResults}
           />
