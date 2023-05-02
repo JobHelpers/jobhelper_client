@@ -10,6 +10,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Loader from "../GradesFinder/components/Loader/Loader";
 import {Modal, ModalTitle, ModalContent, CloseButton} from '../../components'
+import SelectedFaculty from './SelectedFaculty'
 
 import { ToggleSwitch, Button } from "../../components";
 import {
@@ -81,7 +82,7 @@ const FacultyFinder = () => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [resultsLoaded, setResultsLoaded] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [selectedFaculty, setSelectedFaculty] = useState(null);
+  const [selectedFacultyId, setSelectedFacultyId] = useState(null);
 
   const onSubmit = async (formData) => {
     setSearchResults([]);
@@ -173,12 +174,12 @@ const FacultyFinder = () => {
 
   const showFacultyInfo = (facultyId) => {
     setShowModal(true);
-    setSelectedFaculty(facultyId);
+    setSelectedFacultyId(facultyId);
   }
 
   const closeModal = () => {
     setShowModal(false);
-    setSelectedFaculty(null);
+    setSelectedFacultyId(null);
   };
 
   useEffect(() => {
@@ -230,8 +231,10 @@ const FacultyFinder = () => {
     <>
       <Modal showModal={showModal}>
         <CloseButton onClose={closeModal}/>
-        <ModalTitle title="Title" />
-        <ModalContent>{selectedFaculty}</ModalContent>
+        <ModalTitle title="Інформація про факультет :" />
+        <ModalContent>
+          <SelectedFaculty id={selectedFacultyId}/>
+        </ModalContent>
       </Modal>
       <div className="faculty-finder-container">
         <div className="faculty-finder">
