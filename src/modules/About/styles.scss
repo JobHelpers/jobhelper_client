@@ -8,7 +8,7 @@
   text-align: center;
   font-size: 100px;
   margin: 50px;
-  background-image: linear-gradient(to right, #3c3cb6, #69cee5, #d267ce);
+  background-image: linear-gradient(to right, #6fd7ba, rgba(53, 108, 148, 0.5), #386f79);
   color: transparent;
   -webkit-background-clip: text;
   background-size: 200%;
@@ -38,6 +38,6 @@
   max-width: 500px;
   height: auto;
   margin: 50px 50px;
-  border: solid 4px;
-  border-image: linear-gradient(#09f8ee, rgba(255, 75, 213, 0.78)) 27;
+  border: solid 2px;
+  border-image: linear-gradient(#109159, rgba(38, 121, 100, 0.78)) 27;
 }

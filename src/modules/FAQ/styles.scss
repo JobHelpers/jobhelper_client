@@ -1,0 +1,44 @@
+.faq-main {
+  margin: 50px 130px;
+}
+
+.common-questions {
+  font-family: 'Roboto Mono', monospace;
+  display: flex;
+  justify-content: center;
+}
+
+.questions-list {
+  width: 100%;
+  font-family: 'Roboto Mono', monospace;
+  display: flex;
+  justify-content: flex-start;
+  background-color: #e3e5ec;
+  border-radius: 7px;
+  padding: 5px;
+}
+
+.faq-list {
+  width: 100%;
+}
+
+.faq-question {
+  width: 100%;
+  margin: 15px 0;
+  background-color: #c3c7d7;
+  border-radius: 7px;
+  padding: 10px;
+  color: black;
+  font-family: 'Roboto Mono', monospace;
+  &:hover {
+    background-color: #a7d8da;
+  }
+}
+
+.faq-answer {
+  display: none;
+
+}
+.faq-answer.open {
+  display: block;
+}

@@ -17,17 +17,17 @@ const SelectedFaculty = (props)=>{
     <div className="faculty-info-card">
       <p>faculty id: {props.id}</p>
       <h4>{faculty.name}</h4>
-      <h5 className="budget">мін. бал бюджет : {faculty.maxMinGrade[0].maxMinBudget}</h5>
-      <h5 className="contract">мін. бал контракт : {faculty.maxMinGrade[0].maxMinContract}</h5>
-      <p>Предмети для здачі:
+      <h5 className="budget">мін. бал бюджет : {faculty.maxMinGrade.length ? faculty.maxMinGrade[0].maxMinBudget : null}</h5>
+      <h5 className="contract">мін. бал контракт : {faculty.maxMinGrade.length ? faculty.maxMinGrade[0].maxMinContract : null}</h5>
+      <div>Предмети для здачі:
         <ul>
-          {faculty.coefficients.map((item)=>{
+          {faculty.coefficients.length ? faculty.coefficients.map((item)=>{
             return (
-              <li>{item.subjectName} (мін. бал : {item.minGrade})</li>
+              <li key={item.id}>{item.subjectName} (мін. бал : {item.minGrade})</li>
             );
-          })}
+          }) : null}
         </ul>
-      </p>
+      </div>
     </div>
   ) : null;
 }
