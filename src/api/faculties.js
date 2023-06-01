@@ -12,3 +12,7 @@ export const getFacultiesGrades = (params) => {
     params
   });
 }
+
+export const getFacultyInfo = (id) => getData({
+  url: `${config.api}/faculty/${id}/grades`
+});

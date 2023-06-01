@@ -9,6 +9,8 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Loader from "../GradesFinder/components/Loader/Loader";
+import {Modal, ModalTitle, ModalContent, CloseButton} from '../../components'
+import SelectedFaculty from './SelectedFaculty'
 
 import { ToggleSwitch, Button } from "../../components";
 import {
@@ -75,11 +77,12 @@ const FacultyFinder = () => {
   const [subjects, setSubjects] = useState([]);
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [specialities, setSpecialities] = useState([]);
-  const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] =
-    useState({});
+  const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] = useState({});
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
-  const [resultsLoaded, setresultsLoaded] = useState(false);
+  const [resultsLoaded, setResultsLoaded] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedFacultyId, setSelectedFacultyId] = useState(null);
 
   const onSubmit = async (formData) => {
     setSearchResults([]);
@@ -93,7 +96,6 @@ const FacultyFinder = () => {
     const universitiesWithFaculties = [];
 
     if (universities?.data.length) {
-      setresultsLoaded(true);
       universities.data.forEach((university) => {
         getFaculties({
           university: university.id,
@@ -109,6 +111,7 @@ const FacultyFinder = () => {
             setTimeout(() => {
               setSearchLoading(false);
               setSearchResults(universitiesWithFaculties);
+              setResultsLoaded(true);
             }, 2000);
           });
       });
@@ -168,6 +171,17 @@ const FacultyFinder = () => {
     return specialities;
   };
 
+
+  const showFacultyInfo = (facultyId) => {
+    setShowModal(true);
+    setSelectedFacultyId(facultyId);
+  }
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedFacultyId(null);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await Promise.all([
@@ -214,116 +228,126 @@ const FacultyFinder = () => {
   }, [selectedSubjects]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="faculty-finder-container">
-      <div className="faculty-finder">
-        {!loaded ? (
-          <Loader />
-        ) : (
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <ToggleSwitch
-              data={mainSubjects}
-              selected={mainSubject}
-              setSelected={setMainSubject}
-              register={register}
-              setValue={setValue}
-              fieldName="mainSubject"
-            />
+    <>
+      <Modal showModal={showModal}>
+        <CloseButton onClose={closeModal}/>
+        <ModalTitle title="Інформація про факультет :" />
+        <ModalContent>
+          <SelectedFaculty id={selectedFacultyId}/>
+        </ModalContent>
+      </Modal>
+      <div className="faculty-finder-container">
+        <div className="faculty-finder">
+          {!loaded ? (
+            <Loader />
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <ToggleSwitch
+                data={mainSubjects}
+                selected={mainSubject}
+                setSelected={setMainSubject}
+                register={register}
+                setValue={setValue}
+                fieldName="mainSubject"
+              />
 
-            <Box sx={{ display: "flex" }}>
-              <FormControl
-                sx={{ m: 2 }}
-                component="fieldset"
-                variant="standard"
-              >
-                <FormGroup>
-                  {subjects.slice(0, subjects.length / 2).map((subject) => (
-                    <FormControlLabel
-                      key={subject.id}
-                      control={
-                        <Checkbox
-                          name={subject.name}
-                          value={subject.id}
-                          onClick={(event) =>
-                            handleSelectedSubjects(
-                              subject.id,
-                              event.target.checked
-                            )
-                          }
-                          {...register("subjects")}
-                        />
-                      }
-                      label={subject.name}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <FormControl
-                sx={{ m: 2 }}
-                component="fieldset"
-                variant="standard"
-              >
-                <FormGroup>
-                  {subjects.slice(subjects.length / 2).map((subject) => (
-                    <FormControlLabel
-                      key={subject.id}
-                      control={
-                        <Checkbox
-                          name={subject.name}
-                          value={subject.id}
-                          onClick={(event) =>
-                            handleSelectedSubjects(
-                              subject.id,
-                              event.target.checked
-                            )
-                          }
-                          {...register("subjects")}
-                        />
-                      }
-                      label={subject.name}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-            </Box>
+              <Box sx={{ display: "flex" }}>
+                <FormControl
+                  sx={{ m: 2 }}
+                  component="fieldset"
+                  variant="standard"
+                >
+                  <FormGroup>
+                    {subjects.slice(0, subjects.length / 2).map((subject) => (
+                      <FormControlLabel
+                        key={subject.id}
+                        control={
+                          <Checkbox
+                            name={subject.name}
+                            value={subject.id}
+                            onClick={(event) =>
+                              handleSelectedSubjects(
+                                subject.id,
+                                event.target.checked
+                              )
+                            }
+                            {...register("subjects")}
+                          />
+                        }
+                        label={subject.name}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <FormControl
+                  sx={{ m: 2 }}
+                  component="fieldset"
+                  variant="standard"
+                >
+                  <FormGroup>
+                    {subjects.slice(subjects.length / 2).map((subject) => (
+                      <FormControlLabel
+                        key={subject.id}
+                        control={
+                          <Checkbox
+                            name={subject.name}
+                            value={subject.id}
+                            onClick={(event) =>
+                              handleSelectedSubjects(
+                                subject.id,
+                                event.target.checked
+                              )
+                            }
+                            {...register("subjects")}
+                          />
+                        }
+                        label={subject.name}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+              </Box>
 
-            <Controller
-              name="cities"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={cities}
-                  placeholder="Оберіть місто"
-                />
-              )}
-            />
-
-            <div style={{ marginTop: "20px" }}>
               <Controller
-                name="specialities"
+                name="cities"
                 control={control}
                 render={({ field }) => (
                   <Select
                     {...field}
-                    options={getFilteredSpecialities()}
-                    placeholder="Оберіть спеціальність"
+                    options={cities}
+                    placeholder="Оберіть місто"
                   />
                 )}
               />
-            </div>
 
-            <div style={{ marginTop: "20px" }}>
-              <Button type="submit">Підібрати</Button>
-            </div>
-          </form>
-        )}
-        <FacultyFinderResults
-          resultsLoading={resultsLoaded}
-          loading={searchLoading}
-          searchResults={searchResults}
-        />
+              <div style={{ marginTop: "20px" }}>
+                <Controller
+                  name="specialities"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={getFilteredSpecialities()}
+                      placeholder="Оберіть спеціальність"
+                    />
+                  )}
+                />
+              </div>
+
+              <div style={{ marginTop: "20px" }}>
+                <Button type="submit">Підібрати</Button>
+              </div>
+            </form>
+          )}
+          <FacultyFinderResults
+            showFacultyInfo={showFacultyInfo}
+            resultsLoaded={resultsLoaded}
+            loading={searchLoading}
+            searchResults={searchResults}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
