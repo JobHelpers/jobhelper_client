@@ -14,6 +14,8 @@ import {
 import { Form, Faculties } from "./components";
 import "../GradesFinder/styles.css";
 import Loader from "./components/Loader/Loader";
+import NmtForm from "modules/Nmt/NmtForm";
+import { NmtFaculties } from "modules/Nmt/NmtFaculties";
 
 const GradesFinder = () => {
   const [subjects, setSubjects] = useState([]);
@@ -33,6 +35,7 @@ const GradesFinder = () => {
   const [specialitiesWithGroupedSubjects, setSpecialitiesWithGroupedSubjects] =
     useState([]);
   const [subjectGrades, setSubjectGrades] = useState({});
+  const [visible, setVisible] = useState(true); // Zno test UI
 
   const onSubmitForm = (data) => {
     setSubjectGrades(data.subjectsGrades);
@@ -105,7 +108,7 @@ const GradesFinder = () => {
           selectedMainSubject,
           selectedSubjects
         );
-      });
+      }); 
       setSpecialities(filteredSpecialities);
     }
   }, [selectedSubjects]);
@@ -120,28 +123,47 @@ const GradesFinder = () => {
             <h1>Бюджет чи контракт?</h1>
             <h3>Допоможемо правильно розставити пріоритети!</h3>
           </div>
-          <Form
-            subjects={subjects}
-            mainSubjects={mainSubjects}
-            specialities={specialities}
-            cities={cities}
-            universities={universities}
-            setSelectedCity={setSelectedCity}
-            setSelectedSpeciality={setSelectedSpeciality}
-            onSubmitForm={onSubmitForm}
-            setSelectedSubjects={setSelectedSubjects}
-            selectedSubjects={selectedSubjects}
-            setSelectedMainSubject={setSelectedMainSubject}
-          />
+          <div className="test-choice-btn-div">
+            <h4 className="btn-header">1. Виберіть тест, який склали</h4>
+            <div className="row">
+              <div className="col">
+                <input type="button" value="ЗНО" className="zno-choice-btn" onClick={() => setVisible(true)} style={{borderColor: visible ? "seagreen" : "darkseagreen"}}/>
+              </div>
+              <div className="col">
+                <input type="button" value="НМТ" className="nmt-choice-btn" onClick={() => setVisible(false)} style={{borderColor: visible ? "lightsteelblue" : "royalblue"}}/>
+              </div>
+            </div>
+          </div>
+          {visible ? <Form
+              subjects={subjects}
+              mainSubjects={mainSubjects}
+              specialities={specialities}
+              cities={cities}
+              universities={universities}
+              setSelectedCity={setSelectedCity}
+              setSelectedSpeciality={setSelectedSpeciality}
+              onSubmitForm={onSubmitForm}
+              setSelectedSubjects={setSelectedSubjects}
+              selectedSubjects={selectedSubjects}
+              setSelectedMainSubject={setSelectedMainSubject}
+            /> : <NmtForm
+              specialities={specialities}
+              cities={cities}
+              universities={universities}
+              setSelectedCity={setSelectedCity}
+              setSelectedSpeciality={setSelectedSpeciality}
+              onSubmitForm={onSubmitForm} />}
         </div>
       ) : null}
-      {faculties.length ? (
+      {faculties.length && visible ? (
         <Faculties
           faculties={faculties}
           selectedSubjects={[...selectedSubjects, selectedMainSubject]}
           subjectGrades={subjectGrades}
         />
-      ) : null}
+      ) : <NmtFaculties 
+          faculties={faculties}
+          testGrade={subjectGrades} />}
     </>
   );
 };

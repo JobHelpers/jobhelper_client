@@ -1,0 +1,10 @@
+.form-h {
+  margin-bottom: 60px;
+}
+
+.test-grade-input {
+  width: 100px;
+  padding-left: 27px;
+  font-size: 24px;
+  border-color: dimgrey;
+}

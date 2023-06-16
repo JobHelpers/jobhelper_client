@@ -24,3 +24,28 @@
   background-color: teal;
   color: white;
 }
+
+.test-choice-btn-div {
+  text-align: center;
+}
+
+.test-choice-btn-div input {
+  padding: 40px;
+  font-size: 40px;
+  color: white;
+  margin-bottom: 40px;
+}
+
+.btn-header {
+  margin-bottom: 40px;
+}
+
+.zno-choice-btn {
+  background-color: darkseagreen;
+  border: 3px solid darkseagreen;
+}
+
+.nmt-choice-btn {
+  background-color: lightsteelblue;
+  border: 3px solid lightsteelblue;
+}

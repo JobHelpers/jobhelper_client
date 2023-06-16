@@ -18,13 +18,8 @@ export const Form = ({
   selectedSubjects,
   setSelectedMainSubject,
 }) => {
-  const [checkedMainSubject, setCheckedMainSubject] = useState(
-    mainSubjects[0].id
-  );
-
-  const { register, control, handleSubmit } = useForm({
-    mainSubjects: mainSubjects[0].id,
-  });
+  const [checkedMainSubject, setCheckedMainSubject] = useState();
+  const { register, control, handleSubmit } = useForm([mainSubjects[0].id]);
 
   const handleClickOnMainSubject = (event, id) => {
     setCheckedMainSubject(id);
@@ -57,7 +52,7 @@ export const Form = ({
       <div className="row mt-5">
         <div className="col">
           <h4 style={{ marginBottom: 60 }}>
-            Оберіть предмети та вкажіть ваші бали
+            2. Оберіть предмети та вкажіть ваші бали
           </h4>
 
           <div className="row">
@@ -217,7 +212,7 @@ export const Form = ({
                 onChange={(data) =>
                   handleChangeSpeciality(data, field.onChange)
                 }
-                placeholder="Оберіть спеціальність"
+                placeholder="3. Оберіть спеціальність"
                 options={specialities}
               />
             )}
@@ -232,7 +227,7 @@ export const Form = ({
                 <Select
                   {...field}
                   onChange={(data) => handleChangeCity(data, field.onChange)}
-                  placeholder="Оберіть місто"
+                  placeholder="4. Оберіть місто"
                   options={cities}
                 />
               );
@@ -250,7 +245,7 @@ export const Form = ({
               <Select
                 {...field}
                 isMulti
-                placeholder="Оберіть університет"
+                placeholder="5. Оберіть університет"
                 options={universities}
               />
             )}

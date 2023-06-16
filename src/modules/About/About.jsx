@@ -1,6 +1,7 @@
 // todo: set logo, pictures and texts on the right & left sides of page
 
 import firstLogo from '../../assets/first-logo.png'
+import logo from '../../assets/logo.png'
 import spring2022 from '../../assets/spring2022.png'
 import autumn2022 from '../../assets/autumn2022.png'
 import './styles.scss'
@@ -23,7 +24,7 @@ const About = () => {
             залежності від предметів, які здавав на ЗНО абітурієнт.
           </div>
         </div>
-        <img src={firstLogo} className="imgDefault" alt={'team first logo'} title={"team first logo"}/>
+        <img src={logo} className="imgDefault" alt={'team first logo'} title={"team first logo"}/>
       </div>
       <div className="defaultTeamDescription">
         <img src={spring2022} className="imgDefault" alt={'team spring 2022 mvp'} title={"team spring 2022 mvp"}/>
