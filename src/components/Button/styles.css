@@ -10,8 +10,9 @@
   background: #147689;
   transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
   text-decoration: none;
-  display: inline-block;
+  display: block;
   cursor: pointer;
+  margin: 40px auto;
 }
 
 .button:hover {

@@ -51,9 +51,7 @@ export const Form = ({
     <form onSubmit={handleSubmit(onSubmitForm)}>
       <div className="row mt-5">
         <div className="col">
-          <h4 style={{ marginBottom: 60 }}>
-            2. Оберіть предмети та вкажіть ваші бали
-          </h4>
+          <h4 className="form-h">2. Оберіть предмети та вкажіть ваші бали</h4>
 
           <div className="row">
             <div className="col">
@@ -81,9 +79,9 @@ export const Form = ({
                   type="number"
                   {...register(`subjectsGrades.${mainSubjects[0]?.id}`)}
                   style={{
-                    width: 68,
+                    width: 90,
                     marginLeft: 460,
-                    paddingLeft: 16,
+                    paddingLeft: 30,
                     position: "relative",
                     bottom: 28,
                   }}
@@ -111,9 +109,9 @@ export const Form = ({
                       type="number"
                       {...register(`subjectsGrades.${item.id}`)}
                       style={{
-                        width: 68,
+                        width: 90,
                         marginLeft: 460,
-                        paddingLeft: 16,
+                        paddingLeft: 30,
                         position: "relative",
                         bottom: 36,
                       }}
@@ -146,9 +144,9 @@ export const Form = ({
                   type="number"
                   {...register(`subjectsGrades.${mainSubjects[1]?.id}`)}
                   style={{
-                    width: 68,
+                    width: 90,
                     marginLeft: 480,
-                    paddingLeft: 16,
+                    paddingLeft: 30,
                     position: "relative",
                     bottom: 28,
                   }}
@@ -175,9 +173,9 @@ export const Form = ({
                       type="number"
                       {...register(`subjectsGrades.${item.id}`)}
                       style={{
-                        width: 68,
+                        width: 90,
                         marginLeft: 480,
-                        paddingLeft: 16,
+                        paddingLeft: 30,
                         position: "relative",
                         bottom: 36,
                       }}

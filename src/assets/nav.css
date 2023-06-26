@@ -1,17 +1,21 @@
 .nav {
-  margin-top: 12px;
-  background: #32b2cc;
-  padding: 40px 0 40px 0;
+  background: rgb(45, 116, 117);
   display: flex;
   justify-content: center;
 }
 
 .nav a {
-  margin: 0 60px 0 60px;
+  margin: 32px 20px 32px 20px;
   color: white;
   font-size: 20px;
+  padding: 12px 36px 12px 36px;
+  border-radius: 16px;
 }
 
 .nav a:hover {
-  font-weight: bold;
+  background: rgba(176, 174, 174, 0.249);
+}
+
+.active { 
+  background-color: #083b47af;
 }

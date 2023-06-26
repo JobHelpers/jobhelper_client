@@ -1,0 +1,70 @@
+@import url("./animation.css");
+
+.sign-up-form-div {
+  text-align: center;
+  margin-top: 80px;
+  font-size: 18px;
+  background-color: rgb(99, 198, 220);
+  padding: 60px;
+  display: flex;
+  margin-bottom: 100px;
+}
+
+.sign-up-form > .sign-up-input {
+  display: block;
+  margin: 12px auto;
+  padding: 12px 20px 12px 20px;
+  border: none;
+  font-size: 16px;
+}
+
+.sign-up-btn {
+  border-radius: 8px;
+  background-color: rgb(39, 84, 168);
+  color: white;
+  border: none;
+  padding: 12px 48px 12px 48px;
+  font-size: 16px;
+  box-shadow: 2px 2px;
+}
+
+.sign-up-btn:hover {
+  background-color: rgb(64, 171, 228);
+}
+
+.info-span {
+  display: block;
+  margin-bottom: 40px;
+}
+
+.sign-up-form-img {
+  height: 400px;
+  border-radius: 60px 90px 60px 90px;
+}
+
+.sign-up-form-div-child {
+  flex: 1;
+}
+
+.sign-up-form-h {
+  font-size: 36px;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.error-input-span {
+  display: block;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.info-a {
+  display: block;
+  margin-top: 12px;
+  text-decoration: underline;
+}
+
+.sign-up-input:active, .sign-up-input:focus {
+  box-shadow: 4px 4px 4px rgb(66, 81, 163);
+}

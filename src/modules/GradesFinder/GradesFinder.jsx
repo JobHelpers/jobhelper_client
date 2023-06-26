@@ -16,6 +16,7 @@ import "../GradesFinder/styles.css";
 import Loader from "./components/Loader/Loader";
 import NmtForm from "modules/Nmt/NmtForm";
 import { NmtFaculties } from "modules/Nmt/NmtFaculties";
+import IntroImg from "../../assets/intro.png";
 
 const GradesFinder = () => {
   const [subjects, setSubjects] = useState([]);
@@ -120,8 +121,9 @@ const GradesFinder = () => {
       {loaded ? (
         <div className="container">
           <div className="header">
-            <h1>Бюджет чи контракт?</h1>
+            <h1 style={{marginBottom: 20}}>Бюджет чи контракт?</h1>
             <h3>Допоможемо правильно розставити пріоритети!</h3>
+            <img src={IntroImg} alt="introduction image" className="intro-img" />
           </div>
           <div className="test-choice-btn-div">
             <h4 className="btn-header">1. Виберіть тест, який склали</h4>
